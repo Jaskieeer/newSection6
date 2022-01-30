@@ -1,4 +1,3 @@
-import sqlite3
 from flask_restful import Resource, reqparse
 from db import db
 
@@ -21,7 +20,6 @@ class UserModel(db.Model):
                         help="This field cannot be left blank!"
                         )
     def __init__(self, username, password):
-
         self.username = username
         self.password = password
 
