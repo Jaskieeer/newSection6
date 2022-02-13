@@ -30,13 +30,13 @@ class Item(Resource):
 
     def post(self, name):
         data = Item.parser.parse_args()
-        if ItemModel.find_by_name(name).store_id==data['store_id']:
-            return {'message': "An item with name '{}' already exists.".format(name)}
-
-
+        item = ItemModel(name,**data)
         if not StoreModel.find_by_id(data['store_id']):
             return{'message': 'store does not exist'}
-        item = ItemModel(name,**data)
+        if ItemModel.find_by_name_and_store(name, data['store_id']):
+            print(ItemModel.find_by_name_and_store(name, data['store_id']).json())
+            return {'message': "An item with name '{}' already exists.".format(name)}
+
 
         try:
             item.save_to_db()

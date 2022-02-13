@@ -9,7 +9,7 @@ class StoreModel(db.Model):
         self.name = name
 
     def json(self):
-        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
+        return {'id': self.id,'name': self.name, 'items': [item.json() for item in self.items.all()]}
 
     @classmethod
     def find_by_name(cls, name):
@@ -24,5 +24,8 @@ class StoreModel(db.Model):
         db.session.commit()
 
     def delete_from_db(self):
+        for item in self.items:
+            db.session.delete(item)
         db.session.delete(self)
+
         db.session.commit()
