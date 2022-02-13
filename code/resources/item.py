@@ -32,10 +32,9 @@ class Item(Resource):
         data = Item.parser.parse_args()
         item = ItemModel(name,**data)
         if not StoreModel.find_by_id(data['store_id']):
-            return{'message': 'store does not exist'}
+            return{'message': 'store does not exist'},400
         if ItemModel.find_by_name_and_store(name, data['store_id']):
-            print(ItemModel.find_by_name_and_store(name, data['store_id']).json())
-            return {'message': "An item with name '{}' already exists.".format(name)}
+            return {'message': "An item with name '{}' already exists.".format(name)},400
 
 
         try:
@@ -50,8 +49,10 @@ class Item(Resource):
         item= ItemModel.find_by_name(name)
         if item:
             item.delete_from_db()
+            return {'message': 'Item deleted'},201
+        return {'message': "Item doesn't exist"},400
 
-        return {'message': 'Item deleted'}
+
 
 
     def put(self, name):
@@ -64,7 +65,7 @@ class Item(Resource):
             item.store_id = data["store_id"]
         item.save_to_db()
 
-        return item.json()
+        return item.json(),201
 
 
 

@@ -1,10 +1,12 @@
 from db import db
 
 class StoreModel(db.Model):
+    
     __tablename__= 'stores'
     id= db.Column(db.Integer, primary_key=True,autoincrement=True)
     name= db.Column(db.Text(20))
     items = db.relationship('ItemModel',lazy = 'dynamic')
+
     def __init__(self,name):
         self.name = name
 
@@ -27,5 +29,4 @@ class StoreModel(db.Model):
         for item in self.items:
             db.session.delete(item)
         db.session.delete(self)
-
         db.session.commit()
