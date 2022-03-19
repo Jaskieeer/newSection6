@@ -30,12 +30,16 @@ class Item(Resource):
 
     def post(self, name):
         data = Item.parser.parse_args()
-        item = ItemModel(name,**data)
+        item = ItemModel.find_by_name_and_store(name, data['store_id'])
+
         if not StoreModel.find_by_id(data['store_id']):
             return{'message': 'store does not exist'},400
-        if ItemModel.find_by_name_and_store(name, data['store_id']):
-            return {'message': "An item with name '{}' already exists.".format(name)},400
 
+        if item is None:
+            item = ItemModel(name,**data)
+        else:
+            item.count +=1
+            return{'message': 'increased supply of this item'},201
 
         try:
             item.save_to_db()
