@@ -36,9 +36,14 @@ class Item(Resource):
             return{'message': 'store does not exist'},400
 
         if item is None:
-            item = ItemModel(name,**data)
+            item = ItemModel(name,**data,count=1)
         else:
+            item.json()
             item.count +=1
+            try:
+                item.save_to_db()
+            except:
+                return {"message": "An error occurred inserting the item."}, 500
             return{'message': 'increased supply of this item'},201
 
         try:
@@ -63,7 +68,7 @@ class Item(Resource):
         data = Item.parser.parse_args()
         item = ItemModel.find_by_name(name)
         if item is None:
-            item = ItemModel(name,**data)
+            item = ItemModel(name,**data,count=1)
         else:
             item.price =  data["price"]
             item.store_id = data["store_id"]
