@@ -16,8 +16,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'wow'
 api = Api(app)
-# if uri.startswith("postgres://"):
-#     uri = uri.replace("postgres://", "postgresql://", 1)
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
+if uri:
+    app.config['SQLALCHEMY_DATABASE_URI'] = uri
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://data.db'
 @app.before_first_request
 def create_tables():
     db.create_all()
