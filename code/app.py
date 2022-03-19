@@ -12,13 +12,12 @@ from db import db
 #test
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"]= os.environ.get('DATABASE_URL', 'sqlite:///data.db')
-if uri.startswith("postgres://"):
-    uri = uri.replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'wow'
 api = Api(app)
-
+if uri.startswith("postgres://"):
+    uri = uri.replace("postgres://", "postgresql://", 1)
 @app.before_first_request
 def create_tables():
     db.create_all()
